@@ -1,38 +1,61 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-<meta charset="UTF-8">
-<title>Автоплей музики</title>
+  <meta charset="UTF-8">
+  <title>🎶 Моя музика</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background: #121212;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+    }
+    h1 {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+    audio {
+      width: 320px;
+      margin-top: 20px;
+    }
+  </style>
 </head>
 <body>
-<script>
-// Масив файлів від 1 до 42 у папці music
-const tracks = [
-"music/1.mp3","music/2.mp3","music/3.mp3","music/4.mp3","music/5.mp3",
-"music/6.mp3","music/7.mp3","music/8.mp3","music/9.mp3","music/10.mp3",
-"music/11.mp3","music/12.mp3","music/13.mp3","music/14.mp3","music/15.mp3",
-"music/16.mp3","music/17.mp3","music/18.mp3","music/19.mp3","music/20.mp3",
-"music/21.mp3","music/22.mp3","music/23.mp3","music/24.mp3","music/25.mp3",
-"music/26.mp3","music/27.mp3","music/28.mp3","music/29.mp3","music/30.mp3",
-"music/31.mp3","music/32.mp3","music/33.mp3","music/34.mp3","music/35.mp3",
-"music/36.mp3","music/37.mp3","music/38.mp3","music/39.mp3","music/40.mp3",
-"music/41.mp3","music/42.mp3"
-];
+  <h1>🎵 Мій плейлист</h1>
+  <p>Грає автоматично від 1.mp3 до 42.mp3 (з папки <b>music</b>)</p>
 
-let current = 0;
-const audio = new Audio();
-audio.autoplay = true;
-audio.style.display = "none"; // приховуємо плеєр
+  <audio id="player" controls autoplay></audio>
 
-function playNext() {
-    if(tracks.length === 0) return;
-    audio.src = tracks[current];
-    audio.play().catch(()=>console.log("Автоплей заблоковано браузером"));
-    current = (current + 1) % tracks.length;
-}
+  <script>
+    // список треків з папки music
+    const tracks = [];
+    for (let i = 1; i <= 42; i++) {
+      tracks.push("music/" + i + ".mp3");
+    }
 
-audio.addEventListener('ended', playNext);
-window.addEventListener('load', playNext);
-</script>
+    let current = 0;
+    const player = document.getElementById("player");
+
+    function playTrack(index) {
+      current = index;
+      player.src = tracks[current];
+      player.play().catch(err => console.log("Натисни Play вручну:", err));
+    }
+
+    // коли трек закінчився -> наступний
+    player.addEventListener("ended", () => {
+      current = (current + 1) % tracks.length; // по колу
+      playTrack(current);
+    });
+
+    // старт з першого
+    playTrack(0);
+  </script>
 </body>
 </html>
