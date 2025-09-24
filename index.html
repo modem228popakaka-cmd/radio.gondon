@@ -2,90 +2,37 @@
 <html lang="uk">
 <head>
 <meta charset="UTF-8">
-<title>🎶 Мій WebRadio</title>
+<title>Автоплей музики</title>
 </head>
 <body>
-<h1>🎶 Мій WebRadio</h1>
-
-<audio id="player" controls autoplay></audio>
-<select id="playlist"></select>
-
 <script>
+// МАСИВ ФАЙЛІВ
 const tracks = [
-"music/1.mp3",
-"music/2.mp3",
-"music/3.mp3",
-"music/4.mp3",
-"music/5.mp3",
-"music/6.mp3",
-"music/7.mp3",
-"music/8.mp3",
-"music/9.mp3",
-"music/10.mp3",
-"music/11.mp3",
-"music/12.mp3",
-"music/13.mp3",
-"music/14.mp3",
-"music/15.mp3",
-"music/16.mp3",
-"music/17.mp3",
-"music/18.mp3",
-"music/19.mp3",
-"music/20.mp3",
-"music/21.mp3",
-"music/22.mp3",
-"music/23.mp3",
-"music/24.mp3",
-"music/25.mp3",
-"music/26.mp3",
-"music/27.mp3",
-"music/28.mp3",
-"music/29.mp3",
-"music/30.mp3",
-"music/31.mp3",
-"music/32.mp3",
-"music/33.mp3",
-"music/34.mp3",
-"music/35.mp3",
-"music/36.mp3",
-"music/37.mp3",
-"music/38.mp3",
-"music/39.mp3",
-"music/40.mp3",
-"music/41.mp3",
-"music/42.mp3"
+"music/1.mp3","music/2.mp3","music/3.mp3","music/4.mp3","music/5.mp3",
+"music/6.mp3","music/7.mp3","music/8.mp3","music/9.mp3","music/10.mp3",
+"music/11.mp3","music/12.mp3","music/13.mp3","music/14.mp3","music/15.mp3",
+"music/16.mp3","music/17.mp3","music/18.mp3","music/19.mp3","music/20.mp3",
+"music/21.mp3","music/22.mp3","music/23.mp3","music/24.mp3","music/25.mp3",
+"music/26.mp3","music/27.mp3","music/28.mp3","music/29.mp3","music/30.mp3",
+"music/31.mp3","music/32.mp3","music/33.mp3","music/34.mp3","music/35.mp3",
+"music/36.mp3","music/37.mp3","music/38.mp3","music/39.mp3","music/40.mp3",
+"music/41.mp3","music/42.mp3"
 ];
 
-
-const player = document.getElementById('player');
-const playlist = document.getElementById('playlist');
 let current = 0;
+const audio = new Audio();
+audio.autoplay = true;
+audio.style.display = "none"; // щоб не показувати плеєр
 
-// Створюємо список треків у select
-tracks.forEach((track, i) => {
-    const option = document.createElement('option');
-    option.value = i;
-    option.textContent = track.split('/').pop();
-    playlist.appendChild(option);
-});
-
-// Завантажуємо трек
-function loadTrack(index) {
-    current = index;
-    player.src = tracks[index];
-    player.play().catch(() => console.log("Autoplay заблоковано"));
-    playlist.value = index;
+function playNext() {
+    if(tracks.length === 0) return;
+    audio.src = tracks[current];
+    audio.play().catch(()=>console.log("Автоплей заблоковано"));
+    current = (current + 1) % tracks.length;
 }
 
-// Події
-playlist.addEventListener('change', () => loadTrack(parseInt(playlist.value)));
-player.addEventListener('ended', () => {
-    let next = (current + 1) % tracks.length;
-    loadTrack(next);
-});
-
-// Автоплей першого треку
-window.addEventListener('load', () => loadTrack(0));
+audio.addEventListener('ended', playNext);
+window.addEventListener('load', playNext);
 </script>
 </body>
 </html>
