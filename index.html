@@ -2,33 +2,48 @@
 <html lang="uk">
 <head>
   <meta charset="UTF-8">
-  <title>MP3 Автозапуск</title>
+  <title>Мій плейлист</title>
 </head>
 <body>
-  <audio id="player" controls autoplay></audio>
+  <button id="startBtn">▶️ Старт</button>
+  <audio id="player" controls autoplay muted></audio>
 
   <script>
-    // Масив з назвами файлів
+    // Формуємо плейлист (файли лежать у папці "music/")
     const playlist = [];
     for (let i = 1; i <= 42; i++) {
-      playlist.push(i + ".mp3");
+      playlist.push("music/" + i + ".mp3");
     }
 
     let current = 0;
     const audio = document.getElementById("player");
+    const startBtn = document.getElementById("startBtn");
 
-    // завантажуємо перший трек
-    audio.src = playlist[current];
-    audio.play();
+    function playTrack(index) {
+      audio.src = playlist[index];
+      audio.load();
+      audio.play().catch(err => {
+        console.log("Не вдалося програти:", err);
+      });
+    }
 
-    // коли трек закінчився — запускаємо наступний
+    // кнопка старт — знімає mute і запускає перший трек
+    startBtn.addEventListener("click", () => {
+      audio.muted = false;
+      current = 0;
+      playTrack(current);
+    });
+
+    // коли трек закінчився → наступний
     audio.addEventListener("ended", () => {
       current++;
       if (current < playlist.length) {
-        audio.src = playlist[current];
-        audio.play();
+        playTrack(current);
+      } else {
+        console.log("Плейлист закінчився");
       }
     });
   </script>
 </body>
 </html>
+
